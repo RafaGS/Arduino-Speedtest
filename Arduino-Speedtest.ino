@@ -8,6 +8,10 @@
 // easybotics.com hilo90mhz.com
 // 2016-12-1
 
+// Modified By: Rafa Gómez
+// minibots.wordpress.com
+// 2017-07-31
+
 // This sketch is the speed test portion of the Arduino Show Info program
 // http://playground.arduino.cc/Main/ShowInfo
 
@@ -26,7 +30,8 @@
 // PIN_2 is used for digitalWrite / pinMode / analogWrite (PWM)
 // Analog read is hardcoded to 0/1
 
-#define noTitle        // define to remove titles - easier to paste results into comparison spreadsheet
+// General configuration
+//#define noTitle        // define to remove titles - easier to paste results into comparison spreadsheet
 //#define noAnalog       // define to remove analog read/write for ICs without this function
 #define noAnalogRef    // define to remove analogRef test that some cores do not support 
 //#define noDtostrfTest  // define to remove the dtostrf test that some cores do not support
@@ -34,70 +39,90 @@
 //#define USBserialWait  // define to force the main sketch to wait for USB to Serial connection - needed on some native serial boards
 //#define noLtoaTest     // define to remove Itoa test that some cores do not support
 
-// Uncomment only one of the below configurations for your specifc board, or make a new one
+// Uncomment only your specific board, comment the others
+#define BOARD_ATMEGA328
+//#define BOARD_LEONARDO
+//#define BOARD_STM32F103RB
+//#define BOARD_DUE
+//#define BOARD_ZERO
+//#define BOARD_ESP8266
+//#define BOARD_NODEMCU
+//#define BOARD_ESP32
+//#define BOARD_NRF52
 
 // Arduino ATMEGA328
+#ifdef BOARD_ATMEGA328
 #define PIN_1 3
 #define PIN_2 4
+#endif
 
-/*
 // Arduino Leonardo
+#ifdef BOARD_LEONARDO
 #define PIN_1 2
 #define PIN_2 3
 #define noBvTest 
 #define USBserialWait
-*/
+#endif
 
-/*
 // Nucleo STM32F103RB - not tested yet
+#ifdef BOARD_STM32F103RB
 #define PIN_1 12
 #define PIN_2 13
 #define noAnalog 
 #define noBvTest 
 #define noLtoaTest
-*/
+#endif
 
-/*
 // Arduino Due
+#ifdef BOARD_DUE
 #define PIN_1 2
 #define PIN_2 3
 #define noDtostrfTest
 #define noBvTest
 #define USBserialWait
-*/
+#endif
 
-/*
-// Arduino Zero Pins
+// Arduino Zero
+#ifdef BOARD_ZERO
 #define PIN_1 2
 #define PIN_2 3
 #define noBvTest
 #define noDtostrfTest
 #define USBserialWait
-*/
+#endif
 
-/*
-// ESP8266 Pins
+// ESP8266
+#ifdef BOARD_ESP8266
 #define PIN_1 4
 #define PIN_2 5
 #define PIN_3 12
-*/
+#endif
 
-/*
-// ESP32 Pins
+// NODEMCU
+#ifdef BOARD_NODEMCU
+#define PIN_1 4
+#define PIN_2 5
+#define PIN_3 12
+#define noDtostrfTest
+#endif
+
+// ESP32
+#ifdef BOARD_ESP32
 #define PIN_1 25
 #define PIN_2 26
 #define PIN_3 27
 #define noAnalog
-*/
+#endif
 
-/*
-// NRF52/51 Pins
+// NRF52/51
+#ifdef BOARD_NRF52
 #define PIN_1 17
 #define PIN_2 18
 #define PIN_3 19
 #define noDtostrfTest
 #define noBvTest
-*/
+#endif
+
 
 void setup()
 {
@@ -116,7 +141,7 @@ void setup()
   Serial.println("");
  
   delay(1000);
-  
+ 
   speedTest();
 }
 
@@ -138,6 +163,10 @@ void speedTest(void)
   float d, overhead;
   char buffer[30];
 
+#ifdef ESP8266
+  ESP.wdtDisable();
+#endif
+
 #ifndef noTitle
   Serial.println(F(""));
   Serial.println(F("Speed test"));
@@ -154,7 +183,7 @@ void speedTest(void)
 
   delay(800);    // Allow the Serial text to be transmitted
 #ifndef noTitle
-  Serial.print(F("  nop                       : "));
+  Serial.print(F("  nop (overload)                   : "));
 #endif
   delay(70);     // Allow the Serial text to be transmitted
   m=millis();
@@ -191,7 +220,7 @@ void speedTest(void)
   overhead = d - (20.0 * (1000000.0/(float)F_CPU));
   d -= overhead;
   d /= 20.0;             // per instruction
-  Serial.print (d,3);
+  Serial.print (overhead,3);
   Serial.println (F(" us"));
   
 #ifndef noTitle
@@ -846,7 +875,6 @@ void speedTest(void)
   Serial.println (F(" us"));
 
 
-
 #ifndef noTitle
   Serial.print(F("  itoa()                    : "));
 #endif
@@ -1297,7 +1325,10 @@ void speedTest(void)
   Serial.print (d,3);
   Serial.println (F(" us"));
 
+#if defined(ESP8266)
+  ESP.wdtDisable();
 
+#endif
 #ifndef noTitle
   Serial.print(F("  delayMicroseconds(2)      : "));
 #endif
@@ -1336,7 +1367,6 @@ void speedTest(void)
   d /= 20.0;
   Serial.print (d,3);
   Serial.println (F(" us"));
-
 
 #ifndef noTitle
   Serial.print(F("  delayMicroseconds(5)      : "));
@@ -1378,7 +1408,10 @@ void speedTest(void)
   Serial.print (d,3);
   Serial.println (F(" us"));
 
+#if defined(ESP8266)
+  ESP.wdtDisable();
 
+#endif
 #ifndef noTitle
   Serial.print(F("  delayMicroseconds(100)    : "));
 #endif
