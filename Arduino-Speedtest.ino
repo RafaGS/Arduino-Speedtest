@@ -40,14 +40,22 @@
 //#define noLtoaTest     // define to remove Itoa test that some cores do not support
 
 // Uncomment only your specific board, comment the others
+<<<<<<< HEAD
+//#define BOARD_ATMEGA328
+=======
 #define BOARD_ATMEGA328
+>>>>>>> 66734c9e57704745d2fc3404e564f0a5fce55d69
 //#define BOARD_LEONARDO
 //#define BOARD_STM32F103RB
 //#define BOARD_DUE
 //#define BOARD_ZERO
 //#define BOARD_ESP8266
 //#define BOARD_NODEMCU
+<<<<<<< HEAD
+#define BOARD_ESP32
+=======
 //#define BOARD_ESP32
+>>>>>>> 66734c9e57704745d2fc3404e564f0a5fce55d69
 //#define BOARD_NRF52
 
 // Arduino ATMEGA328
@@ -89,6 +97,10 @@
 #define noBvTest
 #define noDtostrfTest
 #define USBserialWait
+<<<<<<< HEAD
+#define Serial SerialUSB
+=======
+>>>>>>> 66734c9e57704745d2fc3404e564f0a5fce55d69
 #endif
 
 // ESP8266
